@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block header %}
+  <script src="{% static 'js/dashboard.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+  <h1 class="page-header">Dashboard</h1>
+
+  <h2 class="sub-header">Websites</h2>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Path</th>
+          <th>Repo</th>
+          <th>Revision</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="font-family: monospace">*:2223/</td>
+          <td><a href="https://github.com/ammubhave/simadmin" target="_blank">https://github.com/ammubhave/simadmin</a></td>
+          <td style="font-family: monospace">12073aaa8307210294a2e015bc1f5602576bb7c1</td>
+          <td>
+            <button type="button" class="btn btn-xs btn-primary">Sync</button>
+            <button type="button" class="btn btn-xs btn-danger" disabled>Delete</button>
+          </td>
+        </tr>
+        <tr>
+          <td style="font-family: monospace">*:80/bootstrap</td>
+          <td><a href="https://github.com/ammubhave/simbootstrap" target="_blank">https://github.com/ammubhave/simbootstrap</a></td>
+          <td style="font-family: monospace">8e6ef9ccbdde806d642aceea67d582fd9c15b250</td>
+          <td>
+            <button type="button" class="btn btn-xs btn-primary" onclick="post_to_get_response('/_/website/sync', {'id': 'simbootstrap'});">Sync</button>
+            <button type="button" class="btn btn-xs btn-danger" disabled>Delete</button>
+          </td>
+        </tr>      
+      </tbody>
+    </table>
+  </div>
+<pre id="status_window" style="background-color: black; height: 400px; color: white; padding: 10px; font-family: monospace">
+Status Window
+=============
+</pre>
+{% endblock %}
