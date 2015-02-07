@@ -1,2 +1,2 @@
 # simadmin
-A Simple Web Admin Tool
+A Simple Admin Tool
