@@ -72,6 +72,7 @@ def _symlink_current_release():
         with settings(warn_only=True):
             run('rm shared/static')
         run('ln -s ../releases/%(release)s/static shared/static' % env)
+        run('cp releases/current/conf/simadmin.conf /etc/httpd/conf.d/simadmin.conf')        
 
 
 def rollback():
@@ -80,6 +81,7 @@ def rollback():
         run('mv current _previous')
         run('mv previous current')
         run('mv _previous previous')
+        run('cp current/conf/simadmin.conf /etc/httpd/conf.d/simadmin.conf')
     reload()
 
 
