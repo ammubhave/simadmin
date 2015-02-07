@@ -15,7 +15,7 @@ def website_sync(request):
 
 def website_sync_stream_response_generator(app):
     import subprocess
-    popen = subprocess.Popen(['fab', 'local_sync:' + app], stdout=subprocess.PIPE)
+    popen = subprocess.Popen(['ls'], stdout=subprocess.PIPE)
     lines_iterator = iter(popen.stdout.readline, b"")
     for line in lines_iterator:
         yield line # yield line
