@@ -8,7 +8,7 @@ https://docs.djangoproject.com/en/1.7/howto/deployment/wsgi/
 """
 
 import os
-os.environ.setdefault("EXTERNAL_CONFIG", "/root/apache_config/simadmin")
+os.environ.setdefault("EXTERNAL_CONFIG", "/var/www/apache_config/simadmin")
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "simadmin.settings")
 
 from django.core.wsgi import get_wsgi_application
