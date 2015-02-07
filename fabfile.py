@@ -16,7 +16,7 @@ def wh():
 
 def sd():
     """Configuration for simmons-dev aka waffle-house"""
-    ms()
+    wh()
 
 
 # Actions
