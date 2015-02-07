@@ -89,6 +89,7 @@ def rollback():
 
 def reload():
     """Does graceful reload of apache"""
+    run('apachectl configtest')
     run('apachectl -k graceful')
 
 
