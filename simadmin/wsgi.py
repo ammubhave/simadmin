@@ -8,12 +8,8 @@ https://docs.djangoproject.com/en/1.7/howto/deployment/wsgi/
 """
 
 import os
+os.environ.setdefault("EXTERNAL_CONFIG", "/root/apache_config/simadmin")
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "simadmin.settings")
 
 from django.core.wsgi import get_wsgi_application
-_application = get_wsgi_application()
-
-def application(environ, start_response):
-    if 'EXTERNAL_CONFIG' in environ:
-        os.environ.setdefault('EXTERNAL_CONFIG', environ['EXTERNAL_CONFIG'])
-    return _application(environ, start_response)
+application = get_wsgi_application()
