@@ -118,7 +118,6 @@ def local_add(repo, app):
             local('git clone ' + repo + ' repository')
             local('mkdir -p releases')
     local_sync(app)
-    local('touch /var/www/apache_config/_reload_apache_flag')
 
 
 def local_remove(app):
