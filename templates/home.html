@@ -34,7 +34,7 @@
         </tr>
         {% for website in websites %}
         <tr>
-          <td style="font-family: monospace">{{ website.path }}</td>
+          <td style="font-family: monospace"><a href="/{{ website.path }}">{{ website.path }}</a></td>
           <td><a href="{{ website.repo }}" target="_blank">{{ website.repo }}</a></td>
           <td style="font-family: monospace">{{ website.has }}</td>
           <td>
