@@ -47,6 +47,21 @@ def home(request):
 
 
 @csrf_exempt
+def website_remove(request):
+    return StreamingHttpResponse(website_remove_stream_response_generator(request.POST['id']))
+
+
+def website_remove_stream_response_generator(repo):
+    popen = subprocess.Popen(['../../.venv/bin/fab', 'local_remove:' + repo[repo.rfind('/') + 1:]], stdout=subprocess.PIPE, cwd=os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+    lines_iterator = iter(popen.stdout.readline, b"")
+    for line in lines_iterator:
+        yield line # yield line
+    if popen.stderr is not None:
+        yield popen.stderr.read() # yield line
+    regenerate_web_root_conf()
+
+
+@csrf_exempt
 def website_add(request):
     return StreamingHttpResponse(website_add_stream_response_generator(request.POST['repo']))
 

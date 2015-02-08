@@ -8,6 +8,7 @@ urlpatterns = patterns('',
 
     url(r'^_/website/sync', 'siteadmin.views.website_sync'),
     url(r'^_/website/add', 'siteadmin.views.website_add'),
+    url(r'^_/website/remove', 'siteadmin.views.website_remove'),
 
     url(r'^admin/', include(admin.site.urls)),
 )

@@ -39,7 +39,7 @@
           <td style="font-family: monospace">{{ website.has }}</td>
           <td>
             <button type="button" class="btn btn-xs btn-primary" onclick="post_to_get_response('/_/website/sync', {'id': '{{ website.name }}'});">Sync</button>
-            <button type="button" class="btn btn-xs btn-danger" disabled>Delete</button>
+            <button type="button" class="btn btn-xs btn-danger" onclick="if(confirm('Are you sure you want to delete {{ website.name }}?')) { post_to_get_response('/_/website/remove', {'id': '{{ website.name }}'}); }">Delete</button>
           </td>
         </tr>
         {% endfor %}
