@@ -52,6 +52,7 @@ def website_add_stream_response_generator(repo):
     if popen.stderr is not None:
         yield popen.stderr.read() # yield line
     regenerate_web_root_conf()
+    subprocess.Popen(['apachectl', '-k', 'graceful'], stdout=subprocess.PIPE)
 
 @csrf_exempt
 def website_sync(request):
@@ -66,6 +67,7 @@ def website_sync_stream_response_generator(app):
     if popen.stderr is not None:
         yield popen.stderr.read() # yield line
     regenerate_web_root_conf()
+    subprocess.Popen(['apachectl', '-k', 'graceful'], stdout=subprocess.PIPE)
 
 
 def regenerate_web_root_conf():
