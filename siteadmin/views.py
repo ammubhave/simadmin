@@ -15,7 +15,7 @@ def website_sync(request):
 
 def website_sync_stream_response_generator(app):
     import subprocess, os
-    popen = subprocess.Popen(['fab', 'local_sync:' + app], stdout=subprocess.PIPE, cwd=os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+    popen = subprocess.Popen(['git pull', 'local_sync:' + app], stdout=subprocess.PIPE, cwd=os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
     lines_iterator = iter(popen.stdout.readline, b"")
     for line in lines_iterator:
         yield line # yield line
