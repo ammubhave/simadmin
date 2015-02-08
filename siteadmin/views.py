@@ -33,11 +33,13 @@ def home(request):
 
     simadmin_has = subprocess.Popen(['git', 'rev-parse', 'HEAD'], stdout=subprocess.PIPE, cwd=os.path.join(root, 'simadmin/repository')).stdout.read()
 
-    user_email = os.environ.get('SSL_CLIENT_S_DN_Email', 'undefined')
+    user_name = request.META.get('SSL_CLIENT_S_DN_CN', 'Anonymous')
+    user_email = request.META.get('SSL_CLIENT_S_DN_Email', 'undefined')
 
     return render_to_response('home.html', {
             'websites': websites,
             'simadmin_has': simadmin_has,
+            'user_name': user_name,
             'user_email': user_email,
         })
 
