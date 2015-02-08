@@ -24,7 +24,7 @@ function post_to_get_response(endpoint, post_data) {
     })
     .done(function(data)
     {   
-        $('#status_window').append("\n============ DONE ============\n");
+        $('#status_window').append("\n============ DONE ============\n Reload this page to see the changes.\n");
     })
     .fail(function(data)
     {
