@@ -52,7 +52,6 @@ def website_add_stream_response_generator(repo):
     if popen.stderr is not None:
         yield popen.stderr.read() # yield line
     regenerate_web_root_conf()
-    subprocess.Popen(['apachectl', '-k', 'graceful'], stdout=subprocess.PIPE)
 
 @csrf_exempt
 def website_sync(request):
@@ -67,7 +66,6 @@ def website_sync_stream_response_generator(app):
     if popen.stderr is not None:
         yield popen.stderr.read() # yield line
     regenerate_web_root_conf()
-    subprocess.Popen(['apachectl', '-k', 'graceful'], stdout=subprocess.PIPE)
 
 
 def regenerate_web_root_conf():
@@ -79,6 +77,7 @@ def regenerate_web_root_conf():
             with open(os.path.join(os.path.join(os.path.join(root, 'web_root'), name), 'releases/current/meta/config.json')) as f:
                 data = json.loads(f.read())
             ev = {
+                'repo_name': data['repo'][data['repo'].rfind('/') + 1:],
                 'path': data['path'],
                 'document_root': data['document_root']
             }
@@ -86,7 +85,7 @@ def regenerate_web_root_conf():
 
             if type_ == 'default':
                 s += """
-Alias /%(path)s "/var/www/web_root/%(path)s/releases/current/%(document_root)s"
+Alias /%(path)s "/var/www/web_root/%(repo_name)s/releases/current/%(document_root)s"
 
 <Location /%(path)s>
    Order allow,deny
