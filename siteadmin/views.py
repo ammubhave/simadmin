@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import condition
 import json
 import os
+import subprocess
 
 # Create your views here.
 def home(request):
@@ -30,8 +31,11 @@ def home(request):
             pass
         websites.append(website)
 
+    simadmin_has = subprocess.Popen(['git', 'rev-parse', 'HEAD'], stdout=subprocess.PIPE, cwd=os.path.join(root, 'simadmin/repository')).stdout.read()
+
     return render_to_response('home.html', {
-            'websites': websites
+            'websites': websites,
+            'simadmin_has': simadmin_has
         })
 
 
