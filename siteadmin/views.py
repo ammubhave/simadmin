@@ -11,20 +11,25 @@ def home(request):
     websites_names = os.listdir(os.path.join(root, 'web_root'))
     websites = []
     for name in websites_names:
+        website = {
+            'path': '',
+            'name': name,
+            'has': '',
+            'repo': ''
+        }
         try:
             with open(os.path.join(os.path.join(os.path.join(root, 'web_root'), name), 'releases/current/meta/config.json')) as f:
                 data = json.loads(f.read())
             path = data.get('path', '')
             repo = data.get('repo', '')
             has = subprocess.Popen(['git', 'rev-parse', 'HEAD'], stdout=subprocess.PIPE, cwd=os.path.join(os.path.join(os.path.join(root, 'web_root'), name), 'repository')).stdout.read()
-            websites.append({
-                'path': path,
-                'name': name,
-                'has': has,
-                'repo': repo
-            })
+            website['path'] = path
+            website['has'] = has
+            website['repo'] = repo
         except Exception, ex:
             pass
+        websites.append(website)
+
     return render_to_response('home.html', {
             'websites': websites
         })
