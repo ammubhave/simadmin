@@ -46,6 +46,21 @@ def home(request):
         })
 
 
+def reports(request):
+    user_name = request.META.get('SSL_CLIENT_S_DN_CN', 'Anonymous')
+    user_email = request.META.get('SSL_CLIENT_S_DN_Email', 'undefined')
+
+    error_log = subprocess.Popen(['tail', '/var/log/httpd/error_log'], stdout=subprocess.PIPE).stdout.read()
+    access_log = subprocess.Popen(['tail', '/var/log/httpd/error_log'], stdout=subprocess.PIPE).stdout.read()
+
+    return render_to_response('reports.html', {
+            'error_log': error_log,
+            'access_log': access_log,
+            'user_name': user_name,
+            'user_email': user_email,
+        })
+
+
 @csrf_exempt
 def website_remove(request):
     return StreamingHttpResponse(website_remove_stream_response_generator(request.POST['id']))

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block header %}
+  <script src="{% static 'js/dashboard.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+  <h1 class="page-header">Reports</h1>
+
+  <a class="btn btn-primary" data-toggle="collapse" href="#errorLogCollapse" aria-expanded="false" aria-controls="errorLogCollapse">
+    Error Log
+  </a>
+  <a class="btn btn-primary" data-toggle="collapse" href="#accessLogCollapse" aria-expanded="false" aria-controls="accessLogCollapse">
+    Access Log
+  </a>
+
+  <div class="collapse" id="errorLogCollapse">
+    <pre id="status_window" style="background-color: black; height: 400px; color: white; padding: 10px; font-family: monospace">
+    {{ error_log }}
+    </pre>
+  </div>
+
+  <div class="collapse" id="accessLogCollapse">
+    <pre id="status_window" style="background-color: black; height: 400px; color: white; padding: 10px; font-family: monospace">
+    {{ access_log }}
+    </pre>
+  </div>
+
+{% endblock %}
