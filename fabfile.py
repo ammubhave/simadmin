@@ -102,11 +102,12 @@ def local_sync(app):
         with settings(warn_only=True), lcd('releases'):
             local('rm previous; mv current previous;' % env)
             local('ln -s %(release)s current' % env)
+        local('touch /var/www/apache_config/_reload_apache_flag')
         #with settings(warn_only=True):
         #    local('rm shared/static')
         #local('ln -s ../releases/%(release)s/static shared/static' % env)
-        local('apachectl configtest')
-        local('apachectl -k graceful')
+        #local('apachectl configtest')
+        #local('apachectl -k graceful')
         # local('cp releases/current/conf/simadmin.conf /etc/httpd/conf.d/simadmin.conf')
 
 

@@ -9,6 +9,9 @@
   <h1 class="page-header">Dashboard</h1>
 
   <h2 class="sub-header">Websites</h2>
+  {% if is_reload_scheduled %}
+    <div class="alert alert-warning" role="alert">An apache reload has been scheduled. This may take upto one minute.</div>
+  {% endif %}
   <div class="table-responsive">
     <table class="table table-striped">
       <thead>

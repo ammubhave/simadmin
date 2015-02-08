@@ -35,12 +35,14 @@ def home(request):
 
     user_name = request.META.get('SSL_CLIENT_S_DN_CN', 'Anonymous')
     user_email = request.META.get('SSL_CLIENT_S_DN_Email', 'undefined')
+    is_reload_scheduled = os.path.exists('/var/www/apache_config/_reload_apache_flag')
 
     return render_to_response('home.html', {
             'websites': websites,
             'simadmin_has': simadmin_has,
             'user_name': user_name,
             'user_email': user_email,
+            'is_reload_scheduled': is_reload_scheduled,
         })
 
 
