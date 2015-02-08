@@ -42,7 +42,7 @@
         {% endfor %}
         <tr>
           <td></td>
-          <td><input type="text" id="new_website_repo" /></td>
+          <td><input type="text" style="width: 100%" class="form-control" id="new_website_repo" /></td>
           <td></td>
           <td><button type="button" class="btn btn-xs btn-success" onclick="post_to_get_response('/_/website/add', {'repo': $('#new_website_repo').val()});">Add</button></td>
         </tr>
