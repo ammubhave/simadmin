@@ -51,7 +51,7 @@ def reports(request):
     user_email = request.META.get('SSL_CLIENT_S_DN_Email', 'undefined')
 
     error_log = subprocess.Popen(['tail', '/var/log/httpd/error_log'], stdout=subprocess.PIPE).stdout.read()
-    access_log = subprocess.Popen(['tail', '/var/log/httpd/error_log'], stdout=subprocess.PIPE).stdout.read()
+    access_log = subprocess.Popen(['tail', '/var/log/httpd/access_log'], stdout=subprocess.PIPE).stdout.read()
 
     return render_to_response('reports.html', {
             'error_log': error_log,
