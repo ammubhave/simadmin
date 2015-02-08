@@ -2,10 +2,32 @@ from django.shortcuts import render_to_response
 from django.http import StreamingHttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import condition
+import json
+import os
 
 # Create your views here.
 def home(request):
-    return render_to_response('home.html')  
+    root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))))
+    websites_names = os.listdir(os.path.join(root, 'web_root'))
+    websites = []
+    for name in websites_names:
+        try:
+            with open(os.path.join(os.path.join(os.path.join(root, 'web_root'), name), 'releases/current/meta/config.json')) as f:
+                data = json.loads(f.read())
+            path = data.get('path', '')
+            repo = data.get('repo', '')
+            has = subprocess.Popen(['git', 'rev-parse', 'HEAD'], stdout=subprocess.PIPE, cwd=os.path.join(os.path.join(os.path.join(root, 'web_root'), name), 'repository')).stdout.read()
+            websites.append({
+                'path': path,
+                'name': name,
+                'has': has,
+                'repo': repo
+            })
+        except Exception, ex:
+            pass
+    return render_to_response('home.html', {
+            'websites': websites
+        })
 
 
 @csrf_exempt
@@ -14,7 +36,7 @@ def website_sync(request):
 
 
 def website_sync_stream_response_generator(app):
-    import subprocess, os
+    import subprocess
     popen = subprocess.Popen(['../../.venv/bin/fab', 'local_sync:' + app], stdout=subprocess.PIPE, cwd=os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
     lines_iterator = iter(popen.stdout.readline, b"")
     for line in lines_iterator:
