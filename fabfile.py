@@ -110,6 +110,15 @@ def local_sync(app):
         # local('cp releases/current/conf/simadmin.conf /etc/httpd/conf.d/simadmin.conf')
 
 
+def local_add(repo, app):
+    with lcd('/var/www/web_root'):
+        local('mkdir -p ' + app)
+        with lcd(app):
+            local('git clone ' + repo + ' repository')
+            local('mkdir -p releases')
+    local_sync(app)
+
+
 # Apache commands
 
 def reload():

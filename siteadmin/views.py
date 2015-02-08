@@ -40,15 +40,60 @@ def home(request):
 
 
 @csrf_exempt
+def website_add(request):
+    return StreamingHttpResponse(website_add_stream_response_generator(request.POST['repo']))
+
+
+def website_add_stream_response_generator(repo):
+    popen = subprocess.Popen(['../../.venv/bin/fab', 'local_add:repo="' + repo + '",app=' + repo[repo.rfind('/') + 1:]], stdout=subprocess.PIPE, cwd=os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+    lines_iterator = iter(popen.stdout.readline, b"")
+    for line in lines_iterator:
+        yield line # yield line
+    if popen.stderr is not None:
+        yield popen.stderr.read() # yield line
+    regenerate_web_root_conf()
+
+@csrf_exempt
 def website_sync(request):
     return StreamingHttpResponse(website_sync_stream_response_generator(request.POST['id']))
 
 
 def website_sync_stream_response_generator(app):
-    import subprocess
     popen = subprocess.Popen(['../../.venv/bin/fab', 'local_sync:' + app], stdout=subprocess.PIPE, cwd=os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
     lines_iterator = iter(popen.stdout.readline, b"")
     for line in lines_iterator:
         yield line # yield line
     if popen.stderr is not None:
         yield popen.stderr.read() # yield line
+    regenerate_web_root_conf()
+
+
+def regenerate_web_root_conf():
+    root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))))
+    websites_names = os.listdir(os.path.join(root, 'web_root'))
+    s = ""
+    for name in websites_names:
+        try:
+            with open(os.path.join(os.path.join(os.path.join(root, 'web_root'), name), 'releases/current/meta/config.json')) as f:
+                data = json.loads(f.read())
+            ev = {
+                'path': data['path'],
+                'document_root': data['document_root']
+            }
+            type_ = data['type']
+
+            if type_ == 'default':
+                s += """
+Alias /%(path)s "/var/www/web_root/%(path)s/releases/current/%(document_root)s"
+
+<Location /%(path)s>
+   Order allow,deny
+   Allow from all
+   Options +FollowSymLinks
+</Location>
+"""
+
+        except Exception, ex:
+            pass
+        with open('/etc/httpd/conf.d/web_root.conf', 'w') as f:
+            f.write(s)
