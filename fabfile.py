@@ -123,6 +123,7 @@ def local_add(repo, app):
 def local_remove(app):
     with lcd('/var/www/web_root'):
         local('rm -rf ' + app)
+    local('touch /var/www/apache_config/_reload_apache_flag')
 
 
 
