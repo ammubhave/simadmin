@@ -91,9 +91,9 @@ Alias /%(path)s "/var/www/web_root/%(path)s/releases/current/%(document_root)s"
    Allow from all
    Options +FollowSymLinks
 </Location>
-"""
+""" % ev
 
         except Exception, ex:
             pass
-        with open('/etc/httpd/conf.d/web_root.conf', 'w') as f:
-            f.write(s)
+    with open('/etc/httpd/conf.d/web_root.conf', 'w') as f:
+        f.write(s)
