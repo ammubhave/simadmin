@@ -43,3 +43,8 @@ function new_website_type_changed() {
         $('#new-website-type-group-static').show();
     }
 }
+
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip();
+});
+
