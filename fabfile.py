@@ -106,11 +106,11 @@ def local_sync(name):
 
 def local_add_static(repo, name, serve_root):
     # Sanity checks
-    if os.path.exists('/var/www/web_root/' + repo):
-        print 'ERROR: ' + '/var/www/web_root/' + repo + ' already exists.'
+    if os.path.exists('/var/www/web_root/' + name):
+        print 'ERROR: ' + '/var/www/web_root/' + name + ' already exists.'
         return
-    if os.path.exists('/var/www/apache_config/simadmin/meta' + repo + '.json'):
-        print 'ERROR: ' + '/var/www/apache_config/simadmin/meta' + repo + '.json already exists.'
+    if os.path.exists('/var/www/apache_config/simadmin/meta' + name + '.json'):
+        print 'ERROR: ' + '/var/www/apache_config/simadmin/meta' + name + '.json already exists.'
         return
 
     # All's good, let's deploy!
@@ -135,7 +135,7 @@ def local_add_static(repo, name, serve_root):
 def local_remove(name):
     # Remove all website data and configs
     local('rm /var/www/apache_config/simadmin/meta/' + name + '.json')
-    local('rm -r /var/www/web_root' + name)
+    local('rm -r /var/www/web_root/' + name)
 
     # Do a apache graceful
     local('touch /var/www/apache_config/_reload_apache_flag')
