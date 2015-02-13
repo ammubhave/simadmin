@@ -104,7 +104,7 @@ def regenerate_web_root_conf():
 
             if type_ == 'static':
                 s += """
-Alias /%(path)s "%(web_root)/%(path)s/releases/current/%(serve_root)s"
+Alias /%(path)s "%(web_root)s/%(path)s/releases/current/%(serve_root)s"
 
 <Location /%(path)s>
    Order allow,deny
