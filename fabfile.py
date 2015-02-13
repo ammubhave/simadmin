@@ -1,4 +1,6 @@
 from fabric.api import *
+import jsonp
+import os
 import subprocess
 
 # Default release is 'current'
@@ -85,46 +87,58 @@ def rollback():
     reload()
 
 
-def local_sync(app):
+def local_sync(name):
     import time
-    env.path = '/var/www/web_root/' + app
-    print "PATH:", env.path
+    env.path = '/var/www/web_root/' + name
     env.release = time.strftime('%Y%m%d%H%M%S')
     with lcd(env.path):
        # print 'execuring local ls'
-       # print subprocess.Popen(['pwd'], stdout=subprocess.PIPE).stdout.read()
         with lcd('repository'):
             local('git pull')
             local('git submodule update --init')
         local('cp -R repository releases/%(release)s' % env)
         local('rm -rf releases/%(release)s/.git*' % env)
-        #local('.venv/bin/pip install -r releases/%(release)s/requirements.txt' % env)
         with settings(warn_only=True), lcd('releases'):
             local('rm previous; mv current previous;' % env)
             local('ln -s %(release)s current' % env)
         local('touch /var/www/apache_config/_reload_apache_flag')
-        #with settings(warn_only=True):
-        #    local('rm shared/static')
-        #local('ln -s ../releases/%(release)s/static shared/static' % env)
-        #local('apachectl configtest')
-        #local('apachectl -k graceful')
-        # local('cp releases/current/conf/simadmin.conf /etc/httpd/conf.d/simadmin.conf')
 
 
-def local_add(repo, app):
+def local_add_static(repo, name, serve_root):
+    # Sanity checks
+    if os.path.exists('/var/www/web_root/' + repo):
+        print 'ERROR: ' + '/var/www/web_root/' + repo + ' already exists.'
+        return
+    if os.path.exists('/var/www/apache_config/simadmin/meta' + repo + '.json'):
+        print 'ERROR: ' + '/var/www/apache_config/simadmin/meta' + repo + '.json already exists.'
+        return
+
+    # All's good, let's deploy!
     with lcd('/var/www/web_root'):
-        local('mkdir -p ' + app)
-        with lcd(app):
+        local('mkdir -p ' + name)
+        with lcd(name):
             local('git clone ' + repo + ' repository')
             local('mkdir -p releases')
-    local_sync(app)
+
+    
+    with open('/var/www/apache_config/simadmin/meta/' + name + '.json', 'w') as f:
+        f.write(json.dumps({
+            'path': name,
+            'repo': repo,
+            'type': 'static',
+            'serve_root': serve_root,
+        }))
+
+    local_sync(name)
 
 
-def local_remove(app):
-    with lcd('/var/www/web_root'):
-        local('rm -rf ' + app)
+def local_remove(name):
+    # Remove all website data and configs
+    local('rm /var/www/apache_config/simadmin/meta/' + name + '.json')
+    local('rm -r /var/www/web_root' + name)
+
+    # Do a apache graceful
     local('touch /var/www/apache_config/_reload_apache_flag')
-
 
 
 # Apache commands

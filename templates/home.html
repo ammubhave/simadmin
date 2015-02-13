@@ -2,7 +2,6 @@
 {% load staticfiles %}
 
 {% block header %}
-  <script src="{% static 'js/dashboard.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -14,23 +13,18 @@
   {% endif %}
   <div class="table-responsive">
     <table class="table table-striped">
-      <thead>
+        <tr>
+          <td colspan="4">
+            <button type="button" class="btn btn-s btn-success" data-toggle="modal" data-target=".add-website-modal"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Deploy New Website</button>
+            <button type="button" class="btn btn-s btn-primary" data-toggle="modal" data-target=".status-window-modal"><span class="glyphicon glyphicon-console" aria-hidden="true"></span> Show Status Window</button>
+          </td>
+          <!-- <button type="button" class="btn btn-s btn-success" onclick="post_to_get_response('/_/website/add', {'repo': $('#new_website_repo').val()});"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add</button> -->
+        </tr>
         <tr>
           <th>Path</th>
           <th>Repo</th>
           <th>Revision</th>
           <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td style="font-family: monospace">*:2223/</td>
-          <td><a href="https://github.com/ammubhave/simadmin" target="_blank">https://github.com/ammubhave/simadmin</a></td>
-          <td style="font-family: monospace">{{ simadmin_has }}</td>
-          <td>
-            <button type="button" class="btn btn-xs btn-primary" disabled>Sync</button>
-            <button type="button" class="btn btn-xs btn-danger" disabled>Delete</button>
-          </td>
         </tr>
         {% for website in websites %}
         <tr>
@@ -38,22 +32,76 @@
           <td><a href="{{ website.repo }}" target="_blank">{{ website.repo }}</a></td>
           <td style="font-family: monospace">{{ website.has }}</td>
           <td>
-            <button type="button" class="btn btn-xs btn-primary" onclick="post_to_get_response('/_/website/sync', {'id': '{{ website.name }}'});">Sync</button>
-            <button type="button" class="btn btn-xs btn-danger" onclick="if(confirm('Are you sure you want to delete {{ website.name }}?')) { post_to_get_response('/_/website/remove', {'id': '{{ website.name }}'}); }">Delete</button>
+            <button type="button" class="btn btn-xs btn-primary" onclick="post_to_get_response('/_/website/sync', {'path': '{{ website.path }}'}); $('.status-window-modal').modal('show');">Sync</button>
+            <button type="button" class="btn btn-xs btn-danger" onclick="if(confirm('Are you sure you want to delete {{ website.path }}?')) { post_to_get_response('/_/website/remove', {'path': '{{ website.path }}'}); $('.status-window-modal').modal('show'); }">Delete</button>
           </td>
         </tr>
         {% endfor %}
-        <tr>
-          <td></td>
-          <td><input type="text" style="width: 100%" class="form-control" id="new_website_repo" /></td>
-          <td></td>
-          <td><button type="button" class="btn btn-xs btn-success" onclick="post_to_get_response('/_/website/add', {'repo': $('#new_website_repo').val()});">Add</button></td>
-        </tr>
-      </tbody>
     </table>
   </div>
-<pre id="status_window" style="background-color: black; height: 400px; color: white; padding: 10px; font-family: monospace">
-Status Window
-=============
-</pre>
+
+<div class="modal fade add-website-modal" tabindex="-1" role="dialog" aria-labelledby="Add Website" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Deploy New Website</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal">
+          <div class="form-group">
+            <label for="new-website-deploy-path" class="col-sm-2 control-label">Deploy path</label>
+            <div class="col-sm-3 control-label">
+              http://simmons-dev.mit.edu/
+            </div>
+            <div class="col-sm-7">
+              <input type="text" class="form-control" id="new-website-deploy-path" placeholder="path">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="new-website-repo" class="col-sm-2 control-label">Git Repo URL</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="new-website-repo" placeholder="https://github.com/simmons-tech/directory">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="new-website-type" class="col-sm-2 control-label">Type</label>
+            <div class="col-sm-10">
+              <select id="new-website-type" onchange="new_website_type_changed()" class="form-control">
+                <option value="static">Static</option>
+              </select>
+            </div>
+          </div>
+          <div id="new-website-type-group-static">
+            <div class="form-group">
+              <label for="new-website-static-serve-root" class="col-sm-2 control-label">Serve Root</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="new-website-static-serve-root" placeholder="srv">
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="post_to_get_response('/_/website/add', {'path': $('#new-website-deploy-path').val(), 'repo': $('#new-website-repo').val(), 'type': $('#new-website-type').val(), 'static-serve-root': $('#new-website-static-serve-root').val()}); $('.add-website-modal').modal('hide'); $('.status-window-modal').modal('show');">Deploy</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade status-window-modal" tabindex="-1" role="dialog" aria-labelledby="Add Website" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><span class="glyphicon glyphicon-console" aria-hidden="true"></span> Status Window</h4>
+      </div>
+      <div class="modal-body">                
+        <pre id="status_window" style="background-color: black; height: 400px; color: white; padding: 10px; font-family: monospace"></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}

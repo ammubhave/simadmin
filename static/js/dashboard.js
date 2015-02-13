@@ -24,11 +24,22 @@ function post_to_get_response(endpoint, post_data) {
     })
     .done(function(data)
     {   
-        $('#status_window').append("\n============ DONE ============\n Reload this page to see the changes.\n");
+        $('#status_window').append("\n============ DONE ============\nReload this page to see the changes.\n\n");
     })
     .fail(function(data)
     {
-        $('#status_window').append("\n============ ERROR ============\n");
+        $('#status_window').append("\n============ ERROR ============\n\n");
     });
     //console.log('Request Sent');
+}
+
+function _hide_all_website_types() {
+    $('#new-website-type-group-static').hide();
+}
+function new_website_type_changed() {
+    _hide_all_website_types();
+    var type = $('#new-website-type').val();
+    if (type == 'static') {
+        $('#new-website-type-group-static').show();
+    }
 }

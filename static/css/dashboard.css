@@ -4,8 +4,7 @@
 
 /* Move down content because we have a fixed navbar that is 50px tall */
 body {
-  padding-top: 65px;
-  margin-bottom: 60px;  
+  padding-top: 65px; 
 }
 
 
@@ -38,7 +37,7 @@ body {
   .sidebar {
     position: fixed;
     top: 51px;
-    bottom: 60px;
+    bottom: 0px;
     left: 0;
     z-index: 1000;
     display: block;
@@ -53,7 +52,7 @@ body {
 /* Sidebar navigation */
 .nav-sidebar {
   margin-right: -21px; /* 20px padding + 1px border */
-  margin-bottom: 20px;
+  /*margin-bottom: 20px;*/
   margin-left: -20px;
 }
 .nav-sidebar > li > a {
