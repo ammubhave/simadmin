@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 from django.conf import settings
 
@@ -26,16 +27,17 @@ def website_add_stream_response_generator(name, repo, type_, details):
     repo_path = os.path.join(settings.WEB_ROOT, name)
     config_path = os.path.join(settings.EXTERNAL_CONFIG, 'meta/' + name + '.json')
     if os.path.exists(repo_path):
-        print 'ERROR: ' + repo_path + ' already exists.'
+        yield 'ERROR: ' + repo_path + ' already exists.'
         return
     if os.path.exists(config_path):
-        print 'ERROR: ' + config_path + ' already exists.'
+        yield 'ERROR: ' + config_path + ' already exists.'
         return
 
     if type_ == 'static':
         popen = subprocess.Popen([os.path.join(settings.BASE_DIR, '.venv/bin/fab'), 'local_add_static:repo="' + repo + '",name=' + name + ',serve_root=' + details['static_serve_root']], stdout=subprocess.PIPE, cwd=os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
     else:
-        return 'ERROR: Type ' + type_ + ' is not valid'
+        yield 'ERROR: Type ' + type_ + ' is not valid'
+        return
 
     lines_iterator = iter(popen.stdout.readline, b"")
     for line in lines_iterator:
@@ -49,10 +51,10 @@ def website_remove_stream_response_generator(name):    # Sanity checks
     repo_path = os.path.join(settings.WEB_ROOT, name)
     config_path = os.path.join(settings.EXTERNAL_CONFIG, 'meta/' + name + '.json')
     if not os.path.exists(repo_path):
-        print 'ERROR: ' + repo_path + ' does not exist.'
+        yield 'ERROR: ' + repo_path + ' does not exist.'
         return
     if not os.path.exists(config_path):
-        print 'ERROR: ' + config_path + ' does not exist.'
+        yield 'ERROR: ' + config_path + ' does not exist.'
         return
 
     popen = subprocess.Popen([os.path.join(settings.BASE_DIR, '.venv/bin/fab'), 'local_remove:' + name], stdout=subprocess.PIPE, cwd=os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
@@ -68,10 +70,10 @@ def website_sync_stream_response_generator(name):
     repo_path = os.path.join(settings.WEB_ROOT, name)
     config_path = os.path.join(settings.EXTERNAL_CONFIG, 'meta/' + name + '.json')
     if not os.path.exists(repo_path):
-        print 'ERROR: ' + repo_path + ' does not exist.'
+        yield 'ERROR: ' + repo_path + ' does not exist.'
         return
     if not os.path.exists(config_path):
-        print 'ERROR: ' + config_path + ' does not exist.'
+        yield 'ERROR: ' + config_path + ' does not exist.'
         return
 
     popen = subprocess.Popen([os.path.join(settings.BASE_DIR, '.venv/bin/fab'), 'local_sync:' + name], stdout=subprocess.PIPE, cwd=os.path.dirname(os.path.dirname(os.path.realpath(__file__))))

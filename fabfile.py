@@ -1,5 +1,4 @@
 from fabric.api import *
-import jsonp
 import os
 import subprocess
 
