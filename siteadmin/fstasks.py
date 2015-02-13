@@ -23,6 +23,7 @@ def list_all_websites():
     for name in websites_names:
         website = get_website_info(name)
         websites.append(website)
+    return websites
 
 
 def website_add_stream_response_generator(name, repo, type_, details):
