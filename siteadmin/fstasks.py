@@ -34,7 +34,7 @@ def website_add_stream_response_generator(name, repo, type_, details):
         return
 
     if type_ == 'static':
-        popen = subprocess.Popen([os.path.join(settings.BASE_DIR, '.venv/bin/fab'), 'local_add_static:repo="' + repo + '",name=' + name + ',serve_root=' + details['static_serve_root']], stdout=subprocess.PIPE, cwd=os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+        popen = subprocess.Popen([os.path.join(settings.BASE_DIR, '../../.venv/bin/fab'), 'local_add_static:repo="' + repo + '",name=' + name + ',serve_root=' + details['static_serve_root']], stdout=subprocess.PIPE, cwd=os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
     else:
         yield 'ERROR: Type ' + type_ + ' is not valid'
         return
@@ -57,7 +57,7 @@ def website_remove_stream_response_generator(name):    # Sanity checks
         yield 'ERROR: ' + config_path + ' does not exist.'
         return
 
-    popen = subprocess.Popen([os.path.join(settings.BASE_DIR, '.venv/bin/fab'), 'local_remove:' + name], stdout=subprocess.PIPE, cwd=os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+    popen = subprocess.Popen([os.path.join(settings.BASE_DIR, '../../.venv/bin/fab'), 'local_remove:' + name], stdout=subprocess.PIPE, cwd=os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
     lines_iterator = iter(popen.stdout.readline, b"")
     for line in lines_iterator:
         yield line # yield line
@@ -76,7 +76,7 @@ def website_sync_stream_response_generator(name):
         yield 'ERROR: ' + config_path + ' does not exist.'
         return
 
-    popen = subprocess.Popen([os.path.join(settings.BASE_DIR, '.venv/bin/fab'), 'local_sync:' + name], stdout=subprocess.PIPE, cwd=os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+    popen = subprocess.Popen([os.path.join(settings.BASE_DIR, '../../.venv/bin/fab'), 'local_sync:' + name], stdout=subprocess.PIPE, cwd=os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
     lines_iterator = iter(popen.stdout.readline, b"")
     for line in lines_iterator:
         yield line # yield line
