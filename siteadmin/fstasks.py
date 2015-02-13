@@ -1,3 +1,4 @@
+import json
 import os
 import subprocess
 
@@ -21,6 +22,7 @@ def list_all_websites():
     websites = []
     for name in websites_names:
         website = get_website_info(name)
+        websites.append(website)
 
 
 def website_add_stream_response_generator(name, repo, type_, details):
