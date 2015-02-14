@@ -21,8 +21,8 @@ def list_all_websites():
     return websites
 
 
-def website_add_stream_response_generator(path, repo, type_, details):
-    for line in ['Adding website ' + path + ' at ' + repo + ' of type ' + type_ + ' with details ' + str(details) + ' ...', ' Done!']:
+def website_add_stream_response_generator(path, repo):
+    for line in ['Adding website ' + path + ' at ' + repo + '...', ' Done!']:
         yield line # yield line
     regenerate_web_root_conf()
 

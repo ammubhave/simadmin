@@ -47,10 +47,7 @@ def website_remove(request):
 
 @csrf_exempt
 def website_add(request):
-    details = {}
-    if request.POST['type'] == 'static':
-        details['static_serve_root'] = request.POST['static-serve-root']
-    return StreamingHttpResponse(settings.FSTASKS.website_add_stream_response_generator(request.POST['path'], request.POST['repo'], request.POST['type'], details))
+    return StreamingHttpResponse(settings.FSTASKS.website_add_stream_response_generator(request.POST['path'], request.POST['repo']))
 
 
 @csrf_exempt

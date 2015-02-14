@@ -104,7 +104,7 @@ def local_sync(name):
         local('touch /var/www/apache_config/_reload_apache_flag')
 
 
-def local_add_static(repo, name, serve_root):
+def local_add(repo, name):
     if repo.startswith("\"") and repo.endswith("\""):
         repo = repo[1:-1]
 
@@ -128,8 +128,6 @@ def local_add_static(repo, name, serve_root):
         f.write(json.dumps({
             'path': name,
             'repo': repo,
-            'type': 'static',
-            'serve_root': serve_root,
         }))
 
     local_sync(name)

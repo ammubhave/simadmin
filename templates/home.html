@@ -64,27 +64,11 @@
               <input type="text" class="form-control" id="new-website-repo" placeholder="https://github.com/simmons-tech/directory">
             </div>
           </div>
-          <div class="form-group">
-            <label for="new-website-type" class="col-sm-2 control-label">Type</label>
-            <div class="col-sm-10">
-              <select id="new-website-type" onchange="new_website_type_changed()" class="form-control">
-                <option value="static">Static</option>
-              </select>
-            </div>
-          </div>
-          <div id="new-website-type-group-static">
-            <div class="form-group">
-              <label for="new-website-static-serve-root" class="col-sm-2 control-label">Serve Root &nbsp;&nbsp;<span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="This is the directory in your repo from where content will be served. For most cases, this will be blank." aria-hidden="true"></span></label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control" id="new-website-static-serve-root" placeholder="srv">
-              </div>
-            </div>
-          </div>
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="post_to_get_response('/_/website/add', {'path': $('#new-website-deploy-path').val(), 'repo': $('#new-website-repo').val(), 'type': $('#new-website-type').val(), 'static-serve-root': $('#new-website-static-serve-root').val()}); $('.add-website-modal').modal('hide'); $('.status-window-modal').modal('show');">Deploy</button>
+        <button type="button" class="btn btn-primary" onclick="post_to_get_response('/_/website/add', {'path': $('#new-website-deploy-path').val(), 'repo': $('#new-website-repo').val()}); $('.add-website-modal').modal('hide'); $('.status-window-modal').modal('show');">Deploy</button>
       </div>
     </div>
   </div>

@@ -26,7 +26,7 @@ def list_all_websites():
     return websites
 
 
-def website_add_stream_response_generator(name, repo, type_, details):
+def website_add_stream_response_generator(name, repo):
     repo_path = os.path.join(settings.WEB_ROOT, name)
     config_path = os.path.join(settings.EXTERNAL_CONFIG, 'meta/' + name + '.json')
     if os.path.exists(repo_path):
@@ -36,11 +36,7 @@ def website_add_stream_response_generator(name, repo, type_, details):
         yield 'ERROR: ' + config_path + ' already exists.'
         return
 
-    if type_ == 'static':
-        popen = subprocess.Popen([os.path.join(settings.BASE_DIR, '../../.venv/bin/fab'), 'local_add_static:repo="' + repo + '",name=' + name + ',serve_root=' + details['static_serve_root']], stdout=subprocess.PIPE, cwd=os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-    else:
-        yield 'ERROR: Type ' + type_ + ' is not valid'
-        return
+    popen = subprocess.Popen([os.path.join(settings.BASE_DIR, '../../.venv/bin/fab'), 'local_add:repo="' + repo + '",name=' + name, stdout=subprocess.PIPE, cwd=os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
     lines_iterator = iter(popen.stdout.readline, b"")
     for line in lines_iterator:
@@ -95,22 +91,23 @@ def regenerate_web_root_conf():
         try:
             with open(os.path.join(settings.EXTERNAL_CONFIG, 'meta/' + name + '.json')) as f:
                 data = json.loads(f.read())
+
             ev = {
                 'path': data['path'],
-                'serve_root': data['serve_root'],
                 'web_root': settings.WEB_ROOT,
             }
-            type_ = data['type']
-
-            if type_ == 'static':
-                s += """
-Alias /%(path)s "%(web_root)s/%(path)s/releases/current/%(serve_root)s"
+            s += """
+Alias /%(path)s "%(web_root)s/%(path)s/releases/current"
 
 <Location /%(path)s>
-   Order allow,deny
-   Allow from all
-   Options +FollowSymLinks
+    Order allow,deny
+    Allow from all
 </Location>
+
+<Directory %(web_root)s/%(path)s/releases/current>
+    Options +FollowSymLinks
+    AllowOverride All
+</Directory>
 """ % ev
 
         except Exception, ex:

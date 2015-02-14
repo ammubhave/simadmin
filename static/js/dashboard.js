@@ -33,17 +33,6 @@ function post_to_get_response(endpoint, post_data) {
     //console.log('Request Sent');
 }
 
-function _hide_all_website_types() {
-    $('#new-website-type-group-static').hide();
-}
-function new_website_type_changed() {
-    _hide_all_website_types();
-    var type = $('#new-website-type').val();
-    if (type == 'static') {
-        $('#new-website-type-group-static').show();
-    }
-}
-
 $(function () {
   $('[data-toggle="tooltip"]').tooltip();
 });
