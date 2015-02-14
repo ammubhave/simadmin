@@ -36,7 +36,7 @@ def website_add_stream_response_generator(name, repo):
         yield 'ERROR: ' + config_path + ' already exists.'
         return
 
-    popen = subprocess.Popen([os.path.join(settings.BASE_DIR, '../../.venv/bin/fab'), 'local_add:repo="' + repo + '",name=' + name, stdout=subprocess.PIPE, cwd=os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+    popen = subprocess.Popen([os.path.join(settings.BASE_DIR, '../../.venv/bin/fab'), 'local_add:repo="' + repo + '",name=' + name], stdout=subprocess.PIPE, cwd=os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
     lines_iterator = iter(popen.stdout.readline, b"")
     for line in lines_iterator:
