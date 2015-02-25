@@ -14,7 +14,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 import siteadmin.fstasks as FSTASKS
 
-EXTERNAL_CONFIG = os.environ['EXTERNAL_CONFIG']
+EXTERNAL_CONFIG = os.environ.get('EXTERNAL_CONFIG', None)
 WEB_ROOT = '/var/www/web_root'
 
 # Quick-start development settings - unsuitable for production

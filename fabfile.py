@@ -94,7 +94,7 @@ def local_sync(name):
     with lcd(env.path):
        # print 'execuring local ls'
         with lcd('repository'):
-            local('git pull')
+            local('git pull -f')
             local('git submodule update --init')
         local('cp -R repository releases/%(release)s' % env)
         local('rm -rf releases/%(release)s/.git*' % env)
