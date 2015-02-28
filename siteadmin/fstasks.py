@@ -86,7 +86,11 @@ def website_sync_stream_response_generator(name):
 
 def regenerate_web_root_conf():
     websites_names = os.listdir(settings.WEB_ROOT)
-    s = ""
+    s = """
+WSGIDaemonProcess default
+SetEnv PROCESS_GROUP default
+WSGIProcessGroup %{ENV:PROCESS_GROUP}
+"""
     for name in websites_names:
         try:
             with open(os.path.join(settings.EXTERNAL_CONFIG, 'meta/' + name + '.json')) as f:
@@ -97,6 +101,7 @@ def regenerate_web_root_conf():
                 'web_root': settings.WEB_ROOT,
             }
             s += """
+WSGIDaemonProcess dp_%(path)s
 Alias /%(path)s "%(web_root)s/%(path)s/releases/current"
 
 <Location /%(path)s>
